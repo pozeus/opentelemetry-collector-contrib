@@ -226,6 +226,22 @@ func TestLoadConfig(t *testing.T) {
 			},
 		},
 		{
+			name: "autodiscover-includelinkedaccounts-log-group",
+			expectedConfig: &Config{
+				Region: "us-west-1",
+				Logs: &LogsConfig{
+					PollInterval:        time.Minute,
+					MaxEventsPerRequest: defaultEventLimit,
+					Groups: GroupConfig{
+						AutodiscoverConfig: &AutodiscoverConfig{
+							Limit:                 100,
+							IncludeLinkedAccounts: true,
+						},
+					},
+				},
+			},
+		},
+		{
 			name: "named-prefix",
 			expectedConfig: &Config{
 				Profile: "my-profile",

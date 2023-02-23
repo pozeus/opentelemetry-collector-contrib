@@ -141,6 +141,33 @@ func TestDiscovery(t *testing.T) {
 	require.NoError(t, logsRcvr.Shutdown(context.Background()))
 }
 
+func TestDiscoveryMultiAccount(t *testing.T) {
+	cfg := createDefaultConfig().(*Config)
+	cfg.Region = "us-west-1"
+	cfg.Logs.PollInterval = 1 * time.Second
+	cfg.Logs.Groups = GroupConfig{
+		AutodiscoverConfig: &AutodiscoverConfig{
+			Limit:                 1,
+			IncludeLinkedAccounts: true,
+			Streams: StreamConfig{
+				Prefixes: []*string{&testLogStreamPrefix},
+				Names:    []*string{&testLogStreamMessage},
+			},
+		},
+	}
+
+	sink := &consumertest.LogsSink{}
+	logsRcvr := newLogsReceiver(cfg, zap.NewNop(), sink)
+	logsRcvr.client = defaultMockClient()
+
+	require.NoError(t, logsRcvr.Start(context.Background(), componenttest.NewNopHost()))
+	require.Eventually(t, func() bool {
+		return sink.LogRecordCount() > 0
+	}, 2*time.Second, 10*time.Millisecond)
+	require.Equal(t, len(logsRcvr.groupRequests), 2)
+	require.NoError(t, logsRcvr.Shutdown(context.Background()))
+}
+
 // Test to ensure that mid collection while streaming results we will
 // return early if Shutdown is called
 func TestShutdownWhileCollecting(t *testing.T) {
