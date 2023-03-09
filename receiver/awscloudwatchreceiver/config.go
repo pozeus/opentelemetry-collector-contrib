@@ -66,11 +66,12 @@ type StreamConfig struct {
 }
 
 var (
-	errNoRegion                       = errors.New("no region was specified")
-	errNoLogsConfigured               = errors.New("no logs configured")
-	errInvalidEventLimit              = errors.New("event limit is improperly configured, value must be greater than 0")
-	errInvalidPollInterval            = errors.New("poll interval is incorrect, it must be a duration greater than one second")
-	errInvalidAutodiscoverLimit       = errors.New("the limit of autodiscovery of log groups is improperly configured, value must be greater than 0")
+	errNoRegion                 = errors.New("no region was specified")
+	errNoLogsConfigured         = errors.New("no logs configured")
+	errInvalidEventLimit        = errors.New("event limit is improperly configured, value must be greater than 0")
+	errInvalidPollInterval      = errors.New("poll interval is incorrect, it must be a duration greater than one second")
+	errInvalidAutodiscoverLimit = errors.New("the limit of autodiscovery of log groups is improperly configured, value must be greater than 0")
+	// errInvalidAutodiscoverIncludeLinkedAccounts = errors.New("the include_linked_accounts of autodiscovery of log groups is improperly configured, value must be a boolean")
 	errAutodiscoverAndNamedConfigured = errors.New("both autodiscover and named configs are configured, Only one or the other is permitted")
 )
 
@@ -140,5 +141,12 @@ func validateAutodiscover(cfg AutodiscoverConfig) error {
 	if cfg.Limit <= 0 {
 		return errInvalidAutodiscoverLimit
 	}
+
+	// var i interface{}
+
+	// if cfg.IncludeLinkedAccounts != i.(bool) {
+	// 	return errInvalidAutodiscoverIncludeLinkedAccounts
+	// }
+
 	return nil
 }

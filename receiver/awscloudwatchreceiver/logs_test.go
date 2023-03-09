@@ -57,7 +57,7 @@ func TestPrefixedConfig(t *testing.T) {
 	cfg.Logs.PollInterval = 1 * time.Second
 	cfg.Logs.Groups = GroupConfig{
 		NamedConfigs: map[string]StreamConfig{
-			testLogGroupName: {
+			testLogGroupArn: {
 				Names: []*string{&testLogStreamName},
 			},
 		},
@@ -89,7 +89,7 @@ func TestPrefixedNamedStreamsConfig(t *testing.T) {
 	cfg.Logs.PollInterval = 1 * time.Second
 	cfg.Logs.Groups = GroupConfig{
 		NamedConfigs: map[string]StreamConfig{
-			testLogGroupName: {
+			testLogGroupArn: {
 				Prefixes: []*string{&testLogStreamPrefix},
 			},
 		},
@@ -176,7 +176,7 @@ func TestShutdownWhileCollecting(t *testing.T) {
 	cfg.Logs.PollInterval = 1 * time.Second
 	cfg.Logs.Groups = GroupConfig{
 		NamedConfigs: map[string]StreamConfig{
-			testLogGroupName: {
+			testLogGroupArn: {
 				Names: []*string{&testLogStreamName},
 			},
 		},
@@ -252,7 +252,7 @@ func defaultMockClient() client {
 		&cloudwatchlogs.DescribeLogGroupsOutput{
 			LogGroups: []*cloudwatchlogs.LogGroup{
 				{
-					LogGroupName: &testLogGroupName,
+					Arn: &testLogGroupArn,
 				},
 			},
 			NextToken: nil,
@@ -274,7 +274,8 @@ func defaultMockClient() client {
 }
 
 var (
-	testLogGroupName     = "test-log-group-name"
+	// testLogGroupName     = "test-log-group-name"
+	testLogGroupArn      = "arn:aws:logs:test:123123123123:log-group:test:*"
 	testLogStreamName    = "test-log-stream-name"
 	testLogStreamPrefix  = "test-log-stream"
 	testEventID          = "37134448277055698880077365577645869800162629528367333379"

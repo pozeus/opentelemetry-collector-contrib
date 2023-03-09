@@ -1,0 +1,26 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+  zipkin:
+
+  awscloudwatch:
+    region: eu-west-1
+    logs:
+      poll_interval: 1m
+      groups:
+        autodiscover:
+          limit: 200
+          prefix: /aws/lambda
+          include_linked_accounts: true
+          streams:
+            prefixes: [gurka]
+  service:
+    pipelines:
+      logs:
+        receivers: [awscloudwatch]
+        processors: [batch]
+        exporters: [file/logs]
+    telemetry:
+      logs:
+        level: debug
